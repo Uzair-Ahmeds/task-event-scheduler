@@ -69,7 +69,11 @@ public class OpenEvent extends JPanel
         timer.start();
 
         homeButton=new JButton("Home");
-        homeButton.setIcon(new ImageIcon(getClass().getResource("Img\\Home.png"))); 
+        try {
+            homeButton.setIcon(new ImageIcon(getClass().getResource("Img\\Home.png")));
+        } catch (Exception e) {
+            System.err.println("Error loading Home icon: " + e.getMessage());
+        }
         homeButton.setBounds(10, 150, 200,70);
         
         Style.buttons(homeButton);
@@ -96,7 +100,12 @@ public class OpenEvent extends JPanel
         pandaPanelSeparator.setForeground(Color.BLACK);
 
         pandaPic=new JLabel();
-        pandaPic.setIcon(new ImageIcon(getClass().getResource("Img\\panda is excited.png"))); 
+        try {
+            pandaPic.setIcon(new ImageIcon(getClass().getResource("Img\\panda is excited.png")));
+        } catch (Exception e) {
+            pandaPic.setText("[Panda Image]");
+            System.err.println("Error loading panda image: " + e.getMessage());
+        }
         pandaPic.setBounds(20, 190, 360,360);
 
         addHeadingLabel=new JLabel("Add ");

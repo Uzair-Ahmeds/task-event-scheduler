@@ -35,7 +35,11 @@ public class DatePanel extends JPanel
             add(doneButton);
 
             donePic = new JLabel();
-            donePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+            try {
+                donePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+            } catch (Exception e) {
+                donePic.setText("✓"); // Fallback if image not found
+            }
             donePic.setBounds(590, 0, 100, 40);
             donePic.setVisible(false);
             add(donePic);
@@ -137,17 +141,21 @@ public class DatePanel extends JPanel
 
         protected void eventBtnAction(Event event)
         {
-            JFrame eventFrame = new JFrame();
-            eventFrame.setLayout(null);
+            try {
+                JFrame eventFrame = new JFrame();
+                eventFrame.setLayout(null);
 
-            eventDetail = new EventDetail(event);
-            eventFrame.add(eventDetail);
+                eventDetail = new EventDetail(event);
+                eventFrame.add(eventDetail);
 
-            doneButton.addActionListener(e -> doneAction());
+                doneButton.addActionListener(e -> doneAction());
 
-            eventFrame.setSize(500, 350);
-            eventFrame.setVisible(true);
-            eventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                eventFrame.setSize(500, 350);
+                eventFrame.setVisible(true);
+                eventFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error opening event: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
 
         @Override

@@ -185,12 +185,16 @@ public class DashBoard extends JPanel
         {
             JOptionPane.showMessageDialog(displayPanel, "Wrtie date in YYYY-MM-DD Format", "Invalid Date Formate", -1);
             JOptionPane.showMessageDialog(displayPanel, inputPanel, "Enter Task Details", JOptionPane.PLAIN_MESSAGE);
+            return null;
         }
 
-
-        Task newTask = new Task(taskName.getText(), LocalDate.parse(taskDate.getText()), taskTag);
-
-        return newTask;
+        try {
+            Task newTask = new Task(taskName.getText(), LocalDate.parse(taskDate.getText()), taskTag);
+            return newTask;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(displayPanel, "Error parsing date: " + e.getMessage(), "Date Parse Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
     }
     
 

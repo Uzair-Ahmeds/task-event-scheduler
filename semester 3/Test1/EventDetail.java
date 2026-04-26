@@ -19,6 +19,11 @@ public class EventDetail extends JPanel
 
     EventDetail(Event event)
     {
+        if (event == null) {
+            JOptionPane.showMessageDialog(null, "Error: Event cannot be null", "Null Event", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         this.event = event;
         all_tasks = new ArrayList<>(event.taskQueue);
 
@@ -50,17 +55,26 @@ public class EventDetail extends JPanel
             taskNameLabel.setBounds(50, 5, 200, 20); 
 
             taskDonePic = new JLabel();
-            if(task.isCompleted){
-                taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
-                taskDonePic.setBounds(260, 30, 100, 40);
-                taskPanel.add(taskDonePic);}
-
-                if(!task.isCompleted){
-                taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+            try {
+                if(task.isCompleted){
+                    taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+                    taskDonePic.setBounds(260, 30, 100, 40);
+                    taskPanel.add(taskDonePic);
+                } else {
+                    taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+                    taskDonePic.setBounds(260, 30, 100, 40);
+                    taskPanel.add(taskDonePic);
+                    taskDonePic.setVisible(false);
+                }
+            } catch (Exception e) {
+                System.err.println("Error loading image: " + e.getMessage());
+                taskDonePic.setText("✓");
                 taskDonePic.setBounds(260, 30, 100, 40);
                 taskPanel.add(taskDonePic);
-                taskDonePic.setVisible(false);
+                if (!task.isCompleted) {
+                    taskDonePic.setVisible(false);
                 }
+            }
 
                 taskTagLabel=new JLabel("Tag:       " + task.tag); 
                 taskTagLabel.setBounds(50, 28, 200, 20); 
@@ -117,6 +131,11 @@ public class EventDetail extends JPanel
 
     protected void eventDoenAction(Event event)
     {
+        if (event == null) {
+            JOptionPane.showMessageDialog(null, "Error: Event is null", "Null Event", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         if(!event.canBeMarkDone() )
          JOptionPane.showMessageDialog(null, "This event can't be marked done. Complete dependent tasks first.");
         
@@ -128,7 +147,11 @@ public class EventDetail extends JPanel
             JOptionPane.showMessageDialog(null, "This Event is marked done.");
             event.isCompleted = true;
             taskDonePic=new JLabel();
-            taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+            try {
+                taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+            } catch (Exception e) {
+                taskDonePic.setText("✓");
+            }
             taskDonePic.setBounds(510, 10, 100, 40);
             taskPanel.add(taskDonePic);
             taskDonePic.setVisible(true);
@@ -158,12 +181,21 @@ public class EventDetail extends JPanel
 
     protected void markTaskDoneAction()
     {
+        if (all_tasks == null || all_tasks.isEmpty()) {
+            JOptionPane.showMessageDialog(taskNameLabel, "No tasks available.");
+            return;
+        }
+        
         Task task=all_tasks.get(current_index);
         if(!task.isCompleted)
         {
          task.isCompleted=true;
          JOptionPane.showMessageDialog(taskNameLabel, "This task is marked Done.");
-         taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+         try {
+             taskDonePic.setIcon(new ImageIcon(getClass().getResource("Img\\markdone.png")));
+         } catch (Exception e) {
+             taskDonePic.setText("✓");
+         }
          taskDonePic.setVisible(true);
          taskPanel.revalidate();
          taskPanel.repaint();

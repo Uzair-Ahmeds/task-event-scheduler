@@ -103,34 +103,40 @@ public class DoublyLinkedList <T> implements Iterable <T>
             head = new Node(data);
             tail = head;
 			//currentNode = head;
+            ++size;
             return;
         }
 
-        LocalDate taskDate = LocalDate.parse(data.toString());
+        try {
+            LocalDate taskDate = LocalDate.parse(data.toString());
 
-        Node current = head;
+            Node current = head;
 
-        while (current!=null && taskDate.isAfter(LocalDate.parse(current.data.toString())))
-            current = current.next;
+            while (current!=null && taskDate.isAfter(LocalDate.parse(current.data.toString())))
+                current = current.next;
 
-        if (current==head)
-        {
-            addToFront(data);
-            return;
+            if (current==head)
+            {
+                addToFront(data);
+                return;
+            }
+
+
+            if (current==null)
+            {
+                addToBack(data);
+                return;
+            }
+
+            Node newNode = new Node(data);
+            newNode.next = current;
+            newNode.prev = current.prev;
+            current.prev.next = newNode;
+            current.prev = newNode;
+            ++size;
+        } catch (Exception e) {
+            System.err.println("Error inserting sorted data: " + e.getMessage());
         }
-
-
-        if (current==null)
-        {
-            addToBack(data);
-            return;
-        }
-
-        Node newNode = new Node(data);
-        newNode.next = current;
-        newNode.prev = current.prev;
-        current.prev.next = newNode;
-        current.prev = newNode;
     }
 
     public void addToFront(T data)
@@ -170,8 +176,9 @@ public class DoublyLinkedList <T> implements Iterable <T>
         if (head==null) return;
         
         head = head.next;
-        head.prev = null;
+        if (head != null) head.prev = null;
 		currentNode = head;
+        --size;
     }
 
     public void addToBack(T data)
@@ -210,11 +217,13 @@ public class DoublyLinkedList <T> implements Iterable <T>
             head = null;
             tail = null;
 			currentNode = null;
+            size = 0;
             return;
         }    
 
         tail = tail.prev;
         tail.next = null;
+        --size;
     }
 
     public boolean find(T key)
@@ -255,6 +264,7 @@ public class DoublyLinkedList <T> implements Iterable <T>
             {
                 current.prev.next = current.next;
                 current.next.prev = current.prev;
+                --size;
                 return;
             }
 
@@ -287,13 +297,12 @@ public class DoublyLinkedList <T> implements Iterable <T>
                 newNode.prev = current.prev;
                 current.prev = newNode;
                 newNode.next = current;
+                ++size;
                 return;
             }
             
             current = current.next;
         }
-
-        ++size;
     }
 
     public void addKeyAfterNode(T key, T nodeData)
